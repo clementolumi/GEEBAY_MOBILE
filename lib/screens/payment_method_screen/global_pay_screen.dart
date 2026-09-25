@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:global_pay/global_pay.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:geebay/app_config.dart';
 import 'package:geebay/custom/toast_component.dart';
+import 'package:geebay/helpers/main_helpers.dart';
 import 'package:geebay/helpers/shared_value_helper.dart';
 import 'package:geebay/my_theme.dart';
 import 'package:geebay/repositories/payment_repository.dart';
@@ -34,7 +36,10 @@ class GlobalPayScreen extends StatefulWidget {
 class _GlobalPayScreenState extends State<GlobalPayScreen> {
   int? _combined_order_id = 0;
   bool _order_init = false;
-  bool _isProcessing = false;
+  String? _initial_url = "";
+  bool _initial_url_fetched = false;
+
+  WebViewController _webViewController = WebViewController();
 
   @override
   void initState() {
@@ -42,7 +47,7 @@ class _GlobalPayScreenState extends State<GlobalPayScreen> {
     if (widget.payment_type == "cart_payment") {
       createOrder();
     } else {
-      initGlobalPay();
+      globalPayInit();
     }
   }
 
@@ -62,81 +67,76 @@ class _GlobalPayScreenState extends State<GlobalPayScreen> {
     _order_init = true;
     setState(() {});
 
-    initGlobalPay();
+    globalPayInit();
   }
 
-  initGlobalPay() async {
-    setState(() {
-      _isProcessing = true;
+  globalPayInit() {
+    _initial_url =
+        "${AppConfig.BASE_URL}/global_pay/init?payment_type=${widget.payment_type}&combined_order_id=${_combined_order_id}&amount=${widget.amount}&user_id=${user_id.$}&package_id=${widget.package_id}&order_id=${widget.orderId}";
+    _initial_url_fetched = true;
+    setState(() {});
+
+    _webViewController
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onWebResourceError: (error) {},
+          onPageFinished: (page) {
+            if (page.contains("/global_pay/payment/callback") ||
+                page.contains("/global_pay/callback") ||
+                page.contains("success")) {
+              getData();
+            }
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(_initial_url!), headers: commonHeader);
+  }
+
+  void getData() {
+    _webViewController
+        .runJavaScriptReturningResult("document.body.innerText")
+        .then((data) {
+      try {
+        var responseJSON = jsonDecode(data as String);
+        if (responseJSON.runtimeType == String) {
+          responseJSON = jsonDecode(responseJSON);
+        }
+        if (responseJSON["result"] == false) {
+          ToastComponent.showDialog(
+            responseJSON["message"],
+          );
+          Navigator.pop(context);
+        } else if (responseJSON["result"] == true) {
+          ToastComponent.showDialog(
+            responseJSON["message"] ?? "Payment successful",
+          );
+
+          if (widget.payment_type == "cart_payment" ||
+              widget.payment_type == "order_re_payment") {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) {
+              return OrderList(from_checkout: true);
+            }));
+          } else if (widget.payment_type == "wallet_payment") {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) {
+              return Wallet(from_recharge: true);
+            }));
+          } else if (widget.payment_type == "customer_package_payment") {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) {
+              return Profile();
+            }));
+          } else {
+            Navigator.of(context).pop();
+          }
+        }
+      } catch (e) {
+        print("Error parsing response: $e");
+      }
     });
-
-    String email = user_email.$ != null && user_email.$.isNotEmpty
-        ? user_email.$
-        : "user@example.com";
-    String phone = user_phone.$ != null && user_phone.$.isNotEmpty
-        ? user_phone.$
-        : "07000000000";
-    String username = user_name.$ != null && user_name.$.isNotEmpty
-        ? user_name.$
-        : "User";
-
-    // Try launching GlobalPay SDK
-    try {
-      GlobalPay.launchGlobalPay(
-        context,
-        email: email,
-        amount: widget.amount ?? 0.0,
-        currency: 'NGN',
-        merchantId: 'merchantId', // Replaced dynamically or via backend settings
-        username: username,
-        userPhone: phone,
-        environment: GlobalPayEnvironment.test,
-        apiKey: 'apikey',
-        redirectURL: 'redirecturl',
-        onClose: (result) {
-          ToastComponent.showDialog(
-            "Checkout closed",
-          );
-          Navigator.of(context).pop();
-        },
-        onSuccess: (TransactionData transactionData) {
-          onPaymentSuccess(transactionData);
-        },
-        onError: (String errorMessage) {
-          ToastComponent.showDialog(
-            errorMessage,
-          );
-          Navigator.of(context).pop();
-        },
-      );
-    } catch (e) {
-      print("GlobalPay error: $e");
-      ToastComponent.showDialog(
-        "Could not launch Global Pay: ${e.toString()}",
-      );
-      Navigator.of(context).pop();
-    }
-  }
-
-  onPaymentSuccess(TransactionData transactionData) async {
-    ToastComponent.showDialog("Payment successful!");
-
-    if (widget.payment_type == "cart_payment" ||
-        widget.payment_type == "order_re_payment") {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-        return OrderList(from_checkout: true);
-      }));
-    } else if (widget.payment_type == "wallet_payment") {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-        return Wallet(from_recharge: true);
-      }));
-    } else if (widget.payment_type == "customer_package_payment") {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-        return Profile();
-      }));
-    } else {
-      Navigator.of(context).pop();
-    }
   }
 
   @override
@@ -147,21 +147,37 @@ class _GlobalPayScreenState extends State<GlobalPayScreen> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: buildAppBar(context),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(color: MyTheme.accent_color),
-              SizedBox(height: 16),
-              Text(
-                LangText(context).local.please_wait_ucf,
-                style: TextStyle(color: MyTheme.font_grey, fontSize: 14),
-              ),
-            ],
-          ),
-        ),
+        body: buildBody(),
       ),
     );
+  }
+
+  buildBody() {
+    if (_order_init == false &&
+        _combined_order_id == 0 &&
+        widget.payment_type == "cart_payment") {
+      return Container(
+        child: Center(
+          child: Text(LangText(context).local.creating_order),
+        ),
+      );
+    } else if (_initial_url_fetched == false) {
+      return Container(
+        child: Center(
+          child: Text("Fetching Global Pay url ..."),
+        ),
+      );
+    } else {
+      return SingleChildScrollView(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: WebViewWidget(
+            controller: _webViewController,
+          ),
+        ),
+      );
+    }
   }
 
   AppBar buildAppBar(BuildContext context) {
