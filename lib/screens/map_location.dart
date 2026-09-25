@@ -13,7 +13,7 @@ import 'package:geebay/my_theme.dart';
 import 'package:geebay/other_config.dart';
 import 'package:geebay/repositories/address_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:geebay/l10n/app_localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_place_picker_mb/google_maps_place_picker.dart';
 

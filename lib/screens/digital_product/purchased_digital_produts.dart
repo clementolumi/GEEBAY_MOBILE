@@ -7,7 +7,7 @@ import 'package:geebay/my_theme.dart';
 import 'package:geebay/repositories/order_repository.dart';
 import 'package:geebay/ui_elements/purchased_digital_product_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:geebay/l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class PurchasedDigitalProducts extends StatefulWidget {

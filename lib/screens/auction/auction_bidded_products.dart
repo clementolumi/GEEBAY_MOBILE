@@ -1,7 +1,7 @@
 import 'package:geebay/repositories/auction_products_repository.dart';
 import 'package:geebay/screens/checkout/cart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:geebay/l10n/app_localizations.dart';
 
 import '../../custom/my_widget.dart';
 import '../../custom/toast_component.dart';

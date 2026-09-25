@@ -5,7 +5,7 @@ import 'package:geebay/my_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:geebay/l10n/app_localizations.dart';
 
 class CommonFunctions{
   BuildContext context;

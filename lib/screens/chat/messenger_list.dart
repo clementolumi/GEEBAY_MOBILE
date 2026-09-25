@@ -6,7 +6,7 @@ import 'package:geebay/my_theme.dart';
 import 'package:geebay/repositories/chat_repository.dart';
 import 'package:geebay/screens/chat/chat.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:geebay/l10n/app_localizations.dart';
 
 class MessengerList extends StatefulWidget {
   @override

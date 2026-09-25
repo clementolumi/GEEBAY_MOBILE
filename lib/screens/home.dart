@@ -8,7 +8,7 @@ import 'package:geebay/screens/flash_deal/flash_deal_list.dart';
 import 'package:geebay/screens/product/todays_deal_products.dart';
 import 'package:geebay/screens/top_sellers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:geebay/l10n/app_localizations.dart';
 
 import '../custom/feature_categories_widget.dart';
 import '../custom/featured_product_horizontal_list_widget.dart';

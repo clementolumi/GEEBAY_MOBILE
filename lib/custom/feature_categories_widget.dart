@@ -1,6 +1,6 @@
 import 'package:geebay/presenter/home_presenter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:geebay/l10n/app_localizations.dart';
 
 import '../helpers/shimmer_helper.dart';
 import '../my_theme.dart';

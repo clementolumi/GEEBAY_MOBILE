@@ -31,7 +31,7 @@ import 'package:geebay/screens/payment_method_screen/sslcommerz_screen.dart';
 import 'package:geebay/screens/payment_method_screen/stripe_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:geebay/l10n/app_localizations.dart';
 import 'package:one_context/one_context.dart';
 import 'package:validators/validators.dart';
 

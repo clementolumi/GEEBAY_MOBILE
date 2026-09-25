@@ -4,7 +4,7 @@ import 'package:geebay/helpers/system_config.dart';
 import 'package:geebay/presenter/cart_counter.dart';
 import 'package:geebay/repositories/cart_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:geebay/l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 

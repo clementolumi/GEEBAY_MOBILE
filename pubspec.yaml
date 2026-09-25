@@ -136,7 +136,7 @@ flutter_launcher_icons:
 # The following section is specific to Flutter.
 flutter:
   uses-material-design: true
-  generate: true
+  generate: false
   assets:
     - assets/
     - assets/htmls/

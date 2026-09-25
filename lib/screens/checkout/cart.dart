@@ -7,7 +7,7 @@ import 'package:geebay/helpers/system_config.dart';
 import 'package:geebay/my_theme.dart';
 import 'package:geebay/presenter/cart_counter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:geebay/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../../custom/cart_seller_item_list_widget.dart';

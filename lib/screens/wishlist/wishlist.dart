@@ -4,7 +4,7 @@ import 'package:geebay/helpers/shimmer_helper.dart';
 import 'package:geebay/my_theme.dart';
 import 'package:geebay/repositories/wishlist_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:geebay/l10n/app_localizations.dart';
 
 import 'widgets/wishlist_grid_view.dart';
 

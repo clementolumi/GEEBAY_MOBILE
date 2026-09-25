@@ -11,7 +11,7 @@ import 'package:flip_card/flip_card.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:geebay/l10n/app_localizations.dart';
 
 class PasswordOtp extends StatefulWidget {
   PasswordOtp({Key? key, this.verify_by = "email", this.email_or_code})
