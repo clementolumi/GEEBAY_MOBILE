@@ -415,7 +415,23 @@ class _CheckoutState extends State<Checkout> {
       })).then((value) {
         onPopped(value);
       });
-    } else if (_selected_payment_method == "global_pay" || _selected_payment_method == "globalpay") {
+
+      } else if (_selected_payment_method == "global_pay" ||
+    _selected_payment_method == "globalpay") {
+  Navigator.push(context, MaterialPageRoute(builder: (context) {
+    return OnlinePay(
+      title: "Pay with GlobalPay",
+      amount: _grandTotalValue,
+      payment_type: payment_type,
+      payment_method_key: _selected_payment_method_key,
+      package_id: widget.packageId.toString(),
+      orderId: widget.order_id,
+    );
+  })).then((value) {
+    onPopped(value);
+  });
+}
+    /**} else if (_selected_payment_method == "global_pay" || _selected_payment_method == "globalpay") {
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return GlobalPayScreen(
           amount: _grandTotalValue,
@@ -426,7 +442,7 @@ class _CheckoutState extends State<Checkout> {
         );
       })).then((value) {
         onPopped(value);
-      });
+      });*/
     } else if (_selected_payment_method == "paytm") {
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return PaytmScreen(
