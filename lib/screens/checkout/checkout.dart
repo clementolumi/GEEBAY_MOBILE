@@ -430,7 +430,6 @@ class _CheckoutState extends State<Checkout> {
   })).then((value) {
     onPopped(value);
   });
-}
     /**} else if (_selected_payment_method == "global_pay" || _selected_payment_method == "globalpay") {
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return GlobalPayScreen(
