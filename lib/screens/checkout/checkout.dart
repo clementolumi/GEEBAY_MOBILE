@@ -127,6 +127,29 @@ class _CheckoutState extends State<Checkout> {
   }
 
   fetchAll() {
+  fetchList();
+
+  // Order repayment must use the existing order amount.
+  // Do not overwrite it with the current cart summary.
+  if (widget.paymentFor == PaymentFor.OrderRePayment) {
+    _grandTotalValue = widget.rechargeAmount;
+    payment_type = 'order_re_payment';
+
+    setState(() {});
+    return;
+  }
+
+  fetchSummary();
+
+  if (widget.paymentFor != PaymentFor.Order) {
+    _grandTotalValue = widget.rechargeAmount;
+
+    payment_type = widget.paymentFor == PaymentFor.WalletRecharge
+        ? "wallet_payment"
+        : "customer_package_payment";
+  }
+}
+  /** fetchAll() {
     fetchList();
     fetchSummary();
     if (widget.paymentFor != PaymentFor.Order) {
@@ -140,7 +163,7 @@ class _CheckoutState extends State<Checkout> {
             : "customer_package_payment";
       }
     } else {}
-  }
+  } */
 
   fetchList() async {
     String mode = '';
